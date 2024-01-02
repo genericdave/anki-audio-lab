@@ -1,0 +1,29 @@
+{
+    "name": "anki-audio-lab",
+    "version": "1.0.0",
+    "description": "Visualize the audio in Anki flashcards as you review them. See pitch information, isolate snippets, play at different speeds, view the spectrogram, temporarily record your voice for quick comparison.",
+    "scripts": {
+        "start": "parcel src/index.html --dist-dir ./docs",
+        "build": "parcel build src/index.html --dist-dir ./docs"
+    },
+    "repository": {
+        "type": "git",
+        "url": "git+https://github.com/genericdave/anki-audio-lab.git"
+    },
+    "keywords": [
+        "anki"
+    ],
+    "author": "genericdave",
+    "license": "SEE LICENSE IN LICENSE FILE",
+    "bugs": {
+        "url": "https://github.com/genericdave/anki-audio-lab/issues"
+    },
+    "homepage": "https://github.com/genericdave/anki-audio-lab#readme",
+    "devDependencies": {
+        "parcel": "^2.10.3"
+    },
+    "dependencies": {
+        "pitchfinder": "^2.3.2",
+        "wavesurfer.js": "^7.6.0"
+    }
+}
