@@ -15,19 +15,19 @@ Before using this tool, you need to configure AnkiConnect as follows:
     ```
 
 The final configuration should resemble the following JSON structure:
-    ```json
-    {
-        "apiKey": null,
-        "apiLogPath": null,
-        "ignoreOriginList": [],
-        "webBindAddress": "127.0.0.1",
-        "webBindPort": 8765,
-        "webCorsOriginList": [
-            "http://localhost",
-            "https://genericdave.github.io"
-        ]
-    }
-    ```
+```json
+{
+    "apiKey": null,
+    "apiLogPath": null,
+    "ignoreOriginList": [],
+    "webBindAddress": "127.0.0.1",
+    "webBindPort": 8765,
+    "webCorsOriginList": [
+        "http://localhost",
+        "https://genericdave.github.io"
+    ]
+}
+```
 
 
 ## Using Anki Audio Lab
