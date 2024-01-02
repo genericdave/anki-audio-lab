@@ -3,7 +3,7 @@
     "version": "1.0.0",
     "description": "Visualize the audio in Anki flashcards as you review them. See the waveform, isolate & repeat snippets, play at different speeds, view the spectrogram, temporarily record your voice for quick comparison.",
     "scripts": {
-        "start": "parcel src/index.html --dist-dir ./testbuild --public-url ./ --no-content-hash",
+        "start": "parcel src/index.html --dist-dir ./testbuild --public-url ./",
         "build": "parcel build src/index.html --dist-dir ./docs --public-url ./"
     },
     "repository": {
