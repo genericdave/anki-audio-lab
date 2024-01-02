@@ -4,7 +4,7 @@ Note: *very* early stages of development.
 
 ## AnkiConnect Configuration
 
-To use this tool, you need to configure AnkiConnect as follows:
+Before using this tool, you need to configure AnkiConnect as follows:
 
 1. Open Anki.
 2. Navigate to `Tools` > `Add-ons`.
@@ -28,6 +28,16 @@ The final configuration should resemble the following JSON structure:
         ]
     }
     ```
+
+
+## Using Anki Audio Lab
+
+1. After configuring AnkiConnect, go to [Anki Audio Lab](https://genericdave.github.io/anki-audio-lab/) in your browser.
+2. Open Anki and start reviewing cards.
+3. Select the field in the flashcard that contains the audio you want to load from the `Audio Field Name` dropdown.
+4. As long as the field contains audio in the standard `[sound:filename.mp3]` format, the audio should load automatically.
+    - If for some reason, you load audio files using a different format, change the regex in the `Audio File Pattern` text box to match your audio field, ensuring that the complete filename is surrounded in parentheses. The first matched group (the pattern in parentheses) will be used as the filename in order to request the audio file from AnkiConnect.
+
 
 ## Building
 
