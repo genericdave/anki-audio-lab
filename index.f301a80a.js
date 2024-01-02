@@ -142,13 +142,13 @@
       this[globalName] = mainExports;
     }
   }
-})({"1EHH8":[function(require,module,exports) {
+})({"hqQ9z":[function(require,module,exports) {
 var global = arguments[3];
 var HMR_HOST = null;
 var HMR_PORT = null;
 var HMR_SECURE = false;
 var HMR_ENV_HASH = "d6ea1d42532a7575";
-module.bundle.HMR_BUNDLE_ID = "a6a7d594616ea15e";
+module.bundle.HMR_BUNDLE_ID = "1d2caf48f301a80a";
 "use strict";
 /* global HMR_HOST, HMR_PORT, HMR_ENV_HASH, HMR_SECURE, chrome, browser, __parcel__import__, __parcel__importScripts__, ServiceWorkerGlobalScope */ /*::
 import type {
@@ -2139,6 +2139,6 @@ var __awaiter = undefined && undefined.__awaiter || function(thisArg, _arguments
 }
 exports.default = WebAudioPlayer;
 
-},{"./event-emitter.js":"6A500","@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3"}]},["1EHH8","8lqZg"], "8lqZg", "parcelRequiree91f")
+},{"./event-emitter.js":"6A500","@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3"}]},["hqQ9z","8lqZg"], "8lqZg", "parcelRequiree91f")
 
-//# sourceMappingURL=index.616ea15e.js.map
+//# sourceMappingURL=index.f301a80a.js.map
