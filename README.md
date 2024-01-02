@@ -57,9 +57,9 @@ The final configuration should resemble the following JSON structure:
 
 ## Why Not Visualize Pitch?
 
-I originally intended to visualize pitch in this project in order to help learners of pitch-accented languages. However, after implementing pitch detection using [pitchfinder](https://github.com/peterkhayes/pitchfinder), I found that it was unable to extract any meaningful pitch data at all for most audio. In the cases where it did detect pitch, it was usually not detailed and accurate enough to actually see the quick, nuanced pitch changes of a pitch-accent language like Japanese.
+I originally intended to visualize pitch in this project in order to help learners of pitch-accented languages. However, after implementing pitch detection using [pitchfinder](https://github.com/peterkhayes/pitchfinder), I found that it was unable to extract any meaningful pitch data at all for a lot of real-world audio. In the cases where it did detect pitch, it was usually not detailed and accurate enough to actually see the quick, nuanced pitch changes of a pitch-accent language like Japanese. It was generally limited to visualizing the large, obvious pitch changes associated with expressing emotion.
 
-Having a visual representation of pitch can be a big detriment if it isn't highly reliable and accurate. The spectrogram feature delivers on those two points.
+Having an unreliable and inaccurate visual representation of pitch is both distracting and misleading. In the end, pitch is something you need to train your *ears* to recognize. If you want a fully accurate visual representation of the sound, please use the spectrogram feature and learn to interpret it.
 
 
 ## Third-Party Licenses
