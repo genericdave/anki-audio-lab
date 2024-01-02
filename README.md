@@ -46,16 +46,15 @@ The final configuration should resemble the following JSON structure:
     ```sh
     npm install
     ```
-- Build the project:
+- Build the project, placing built files in the `docs` directory. Allowing uploading to someplace like Github Pages:
     ```sh
     npm run build
     ```
-- Or build the project and run a server to host the files:
+- Or run a local server to host the files:
     ```sh
     npm start
     ```
-- If you want to use it locally, you will need to add `http://localhost:1234` to the `webCorsOriginList` in the AnkiConnect configuration. See [AnkiConnect Configuration](#ankiconnect-configuration) for more details.
-- Built files will be placed in the `docs` directory.
+    - If you want to use Anki Audio Lab locally, you will need to add `http://localhost:1234` to the `webCorsOriginList` in the AnkiConnect configuration. See [AnkiConnect Configuration](#ankiconnect-configuration) for more details.
 
 
 ## Techniques For Learning Pronunciation, Pitch, Prosody, etc.
