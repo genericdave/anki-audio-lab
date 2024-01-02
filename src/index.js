@@ -1,77 +1,15 @@
 import WaveSurfer from 'wavesurfer.js';
 
-
 // DOM elements
 const statusElement = document.getElementById('status');
 const fieldNameSelect = document.getElementById('field-name-select');
 const regexPatternInput = document.getElementById('regex-pattern-input');
 const cardFieldsElement = document.getElementById('card-fields');
-const queryAudioButton = document.getElementById('query-audio-button');
 
 
 // Event listeners
 fieldNameSelect.addEventListener('change', queryAudio);
 regexPatternInput.addEventListener('input', queryAudio);
-
-
-// Initialize Wavesurfer
-// Example code from https://wavesurfer.xyz/examples/?pitch.js
-const pitchWorker = new Worker(
-    new URL('pitch-worker.js', import.meta.url),
-    { type: 'module' }
-);
-
-const wavesurfer = WaveSurfer.create({
-    container: '#waveform',
-    waveColor: 'rgba(200, 200, 200, 0.5)',
-    progressColor: 'rgba(100, 100, 100, 0.5)',
-    minPxPerSec: 200,
-    sampleRate: 11025,
-});
-
-// Pitch detection
-wavesurfer.on('decode', () => {
-    const peaks = wavesurfer.getDecodedData().getChannelData(0);
-    pitchWorker.postMessage({ peaks, sampleRate: wavesurfer.options.sampleRate });
-});
-
-// When the worker sends back pitch data, update the UI
-pitchWorker.onmessage = (e) => {
-    const { frequencies, baseFrequency } = e.data;
-
-    // Render the frequencies on a canvas
-    const pitchUpColor = '#385587';
-    const pitchDownColor = '#C26351';
-    const height = 100;
-
-    const canvas = document.createElement('canvas');
-    const ctx = canvas.getContext('2d');
-    canvas.width = frequencies.length;
-    canvas.height = height;
-    canvas.style.width = '100%';
-    canvas.style.height = '100%';
-
-    // Each frequency is a point whose Y position is the frequency and X position is the time
-    const pointSize = devicePixelRatio;
-    let prevY = 0;
-    frequencies.forEach((frequency, index) => {
-        if (!frequency) return;
-        const y = Math.round(height - (frequency / (baseFrequency * 2)) * height);
-        ctx.fillStyle = y > prevY ? pitchDownColor : pitchUpColor;
-        ctx.fillRect(index, y, pointSize, pointSize);
-        prevY = y;
-    });
-
-    // Add the canvas to the waveform container
-    wavesurfer.renderer.getWrapper().appendChild(canvas);
-    // Remove the canvas when a new audio is loaded
-    wavesurfer.once('load', () => canvas.remove());
-};
-
-// Play on click
-wavesurfer.on('interaction', () => {
-    if (!wavesurfer.isPlaying()) wavesurfer.play();
-});
 
 
 // Functions
@@ -208,3 +146,18 @@ async function main() {
 }
 
 main();
+
+
+// Wavesurfer setup
+const wavesurfer = WaveSurfer.create({
+    container: '#waveform',
+    waveColor: 'rgba(200, 200, 200, 0.5)',
+    progressColor: 'rgba(100, 100, 100, 0.5)',
+    minPxPerSec: 200,
+    sampleRate: 11025,
+});
+
+// Play on click
+wavesurfer.on('interaction', () => {
+    if (!wavesurfer.isPlaying()) wavesurfer.play();
+});

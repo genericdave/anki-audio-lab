@@ -48,11 +48,23 @@ The final configuration should resemble the following JSON structure:
 - Built files will be placed in the `docs` directory.
 
 
+## Techniques For Learning Pronunciation, Pitch, Prosody, etc.
+
+- Reduce the audio speed. It may be useful to turn off the `maintain pitch` setting in order to make the playback smoother. 
+- Isolate any sections that contain sounds that are difficult to hear or say. You can isolate all the way down to a single phoneme at a time. Shadow the isolated section, then expand your selection as you start to be able to hear and imitate the sounds accurately.
+- Use the record feature to compare your shadowing to the native speaker audio.
+
+
+## Why Not Visualize Pitch?
+
+I originally intended to visualize pitch in this project in order to help learners of pitch-accented languages. However, after implementing pitch detection using [pitchfinder](https://github.com/peterkhayes/pitchfinder), I found that it was unable to extract any meaningful pitch data at all for most audio. In the cases where it did detect pitch, it was usually not detailed and accurate enough to actually see the quick, nuanced pitch changes of a pitch-accent language like Japanese.
+
+Having a visual representation of pitch can be a big detriment if it isn't highly reliable and accurate. The spectrogram feature delivers on those two points.
+
+
 ## Third-Party Licenses
 
-This project uses some example code provided by third party libraries:
+This project uses third party libraries:
 
-- From [wavesurfer.js](https://github.com/katspaugh/wavesurfer.js):
-    - [pitch-worker.js](https://github.com/katspaugh/wavesurfer.js/blob/main/examples/pitch-worker.js)
-    - [Provided example code](https://wavesurfer.xyz/examples/?pitch.js)
+- [wavesurfer.js](https://github.com/katspaugh/wavesurfer.js)
 - For detailed license terms, refer to the `LICENSE-third-party` file in this repository.
