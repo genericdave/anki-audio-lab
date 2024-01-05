@@ -1,6 +1,7 @@
-// Init
 import WaveSurfer from 'wavesurfer.js';
+import { ankiConnectInvoke } from "./util.js";
 
+// Init
 const wavesurfer = WaveSurfer.create({
     container: '#waveform',
     waveColor: 'rgba(200, 200, 200, 0.5)',
@@ -11,46 +12,9 @@ const wavesurfer = WaveSurfer.create({
 
 
 // Functions
-function acInvoke(action, version, params = {}) {
-    return new Promise((resolve, reject) => {
-        const xhr = new XMLHttpRequest();
-        xhr.addEventListener('error', () => reject('failed to issue request'));
-        xhr.addEventListener('load', () => {
-            try {
-                const response = JSON.parse(xhr.responseText);
-                if (Object.getOwnPropertyNames(response).length != 2) {
-                    throw 'response has an unexpected number of fields';
-                }
-                if (!response.hasOwnProperty('error')) {
-                    throw 'response is missing required error field';
-                }
-                if (!response.hasOwnProperty('result')) {
-                    throw 'response is missing required result field';
-                }
-                if (response.error) {
-                    throw response.error;
-                }
-                resolve(response.result);
-            } catch (e) {
-                reject(e);
-            }
-        });
-
-        xhr.open('POST', 'http://127.0.0.1:8765');
-        xhr.send(JSON.stringify({ action, version, params }));
-    });
-}
-
-async function queryAudio() {
-    const cardData = await fetchCurrentCard();
-    if (cardData) {
-        displayCardInfo(cardData);
-    }
-}
-
 async function retrieveAndPlayAudio(filename) {
     try {
-        const result = await acInvoke('retrieveMediaFile', 6, { filename });
+        const result = await ankiConnectInvoke('retrieveMediaFile', 6, { filename });
         if (result) {
             const audioBlob = atob(result); // Decode base64
             const audioBuffer = new Uint8Array(audioBlob.length).map((_, i) => audioBlob.charCodeAt(i));
@@ -92,16 +56,6 @@ function displayCardInfo(cardData) {
     }
 }
 
-async function fetchCurrentCard() {
-    try {
-        const result = await acInvoke('guiCurrentCard', 6);
-        return result;
-    } catch (e) {
-        updateStatus('Error: ' + e);
-        return null;
-    }
-}
-
 
 // View update
 const statusElement = document.getElementById('status');
@@ -109,8 +63,6 @@ const fieldNameSelect = document.getElementById('field-name-select');
 const regexPatternInput = document.getElementById('regex-pattern-input');
 const cardFieldsElement = document.getElementById('card-fields');
 
-fieldNameSelect.addEventListener('change', queryAudio);
-regexPatternInput.addEventListener('input', queryAudio);
 wavesurfer.on('interaction', wavesurfer.playPause);
 
 function updateStatus(message) {
@@ -118,19 +70,22 @@ function updateStatus(message) {
 }
 
 function populateFieldNames(cardData) {
-    const currentSelection = fieldNameSelect.value;
-    fieldNameSelect.innerHTML = '';
+    const previousSelection = fieldNameSelect.value;
 
+    let optionsHTML = "";
     for (const field of Object.keys(cardData.fields)) {
-        const option = document.createElement('option');
-        option.value = field;
-        option.textContent = field;
-        fieldNameSelect.appendChild(option);
+        optionsHTML += `<option value="${field}" ${field === previousSelection ? 'selected' : ''}}>${field}</option>`;
     }
 
-    // Check if the previously selected field exists in the new fields
-    if (cardData.fields.hasOwnProperty(currentSelection)) {
-        fieldNameSelect.value = currentSelection; // Set the previously selected field
+    fieldNameSelect.innerHTML = optionsHTML;
+}
+
+async function fetchCurrentCard() {
+    try {
+        return await ankiConnectInvoke('guiCurrentCard', 6);
+    } catch (e) {
+        updateStatus('Error: ' + e);
+        return;
     }
 }
 
@@ -138,13 +93,21 @@ function populateFieldNames(cardData) {
 // Main
 async function main() {
     let lastCardId = null;
+    let lastSelectedField = null;
     async function pollForNewCard() {
         const cardData = await fetchCurrentCard();
+        if (!cardData) {
+            // No card available, so unload audio and card data.
+        } else if (cardData.cardId === lastCardId) {
+            // Card didn't change, so do nothing.
+            return;
+        }
 
-        const noUpdateNeeded = !cardData || cardData.cardId === lastCardId;
-        if (noUpdateNeeded) return;
+        // TODO: Add a check to see if the newly selected field from
+        // populateFieldNames is different from lastSelectedField. If so, we
+        // should update, even if cardId hasn't changed. populateFieldNames
+        // needs to return the proper data.
 
-        updateStatus('Card with ID ' + cardData.cardId + ' fetched');
         lastCardId = cardData.cardId;
         populateFieldNames(cardData);
         displayCardInfo(cardData);
