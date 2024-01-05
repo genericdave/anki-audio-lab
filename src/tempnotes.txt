@@ -1,0 +1,9 @@
+Use alpine.js, pico css, and typescript
+keyboard shortcuts: when not focused in a textbox: space to play/pause, esc to clear selection.
+allow selecting a portion of audio which will limit the playback to that section.
+cookies to save entered info
+implement https://github.com/cwilso/PitchDetect/tree/main
+replace regex with star notation: [sound:*]
+dark mode
+console shouldn't be logging errors. should go in status
+when No matching audio file found, audio should be unloaded

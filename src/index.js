@@ -1,17 +1,13 @@
-import { wavesurfer } from "./init";
+// Init
+import WaveSurfer from 'wavesurfer.js';
 
-
-// DOM elements
-const statusElement = document.getElementById('status');
-const fieldNameSelect = document.getElementById('field-name-select');
-const regexPatternInput = document.getElementById('regex-pattern-input');
-const cardFieldsElement = document.getElementById('card-fields');
-
-
-// Event listeners
-fieldNameSelect.addEventListener('change', queryAudio);
-regexPatternInput.addEventListener('input', queryAudio);
-wavesurfer.on('interaction', wavesurfer.playPause);
+const wavesurfer = WaveSurfer.create({
+    container: '#waveform',
+    waveColor: 'rgba(200, 200, 200, 0.5)',
+    progressColor: 'rgba(100, 100, 100, 0.5)',
+    minPxPerSec: 200,
+    sampleRate: 11025,
+});
 
 
 // Functions
@@ -52,10 +48,6 @@ async function queryAudio() {
     }
 }
 
-function updateStatus(message) {
-    statusElement.textContent = message;
-}
-
 async function retrieveAndPlayAudio(filename) {
     try {
         const result = await acInvoke('retrieveMediaFile', 6, { filename });
@@ -74,28 +66,9 @@ async function retrieveAndPlayAudio(filename) {
     }
 }
 
-function populateFieldNames(fields) {
-    const currentSelection = fieldNameSelect.value; // Store the current selection
-    fieldNameSelect.innerHTML = ''; // Clear existing options
-
-    Object.keys(fields).forEach(field => {
-        const option = document.createElement('option');
-        option.value = field;
-        option.textContent = field;
-        fieldNameSelect.appendChild(option);
-    });
-
-    // Check if the previously selected field exists in the new fields
-    if (fields.hasOwnProperty(currentSelection)) {
-        fieldNameSelect.value = currentSelection; // Set the previously selected field
-    }
-}
-
 function displayCardInfo(cardData) {
     // Displaying the card fields as formatted JSON
     cardFieldsElement.textContent = JSON.stringify(cardData.fields, null, 4); // Indents with 4 spaces
-
-    populateFieldNames(cardData.fields);
 
     // Extracting field name and regex pattern from user input
     const fieldName = fieldNameSelect.value;
@@ -130,18 +103,51 @@ async function fetchCurrentCard() {
 }
 
 
+// View update
+const statusElement = document.getElementById('status');
+const fieldNameSelect = document.getElementById('field-name-select');
+const regexPatternInput = document.getElementById('regex-pattern-input');
+const cardFieldsElement = document.getElementById('card-fields');
+
+fieldNameSelect.addEventListener('change', queryAudio);
+regexPatternInput.addEventListener('input', queryAudio);
+wavesurfer.on('interaction', wavesurfer.playPause);
+
+function updateStatus(message) {
+    statusElement.textContent = message;
+}
+
+function populateFieldNames(cardData) {
+    const currentSelection = fieldNameSelect.value;
+    fieldNameSelect.innerHTML = '';
+
+    for (const field of Object.keys(cardData.fields)) {
+        const option = document.createElement('option');
+        option.value = field;
+        option.textContent = field;
+        fieldNameSelect.appendChild(option);
+    }
+
+    // Check if the previously selected field exists in the new fields
+    if (cardData.fields.hasOwnProperty(currentSelection)) {
+        fieldNameSelect.value = currentSelection; // Set the previously selected field
+    }
+}
+
+
 // Main
 async function main() {
     let lastCardId = null;
     async function pollForNewCard() {
-        const result = await fetchCurrentCard();
+        const cardData = await fetchCurrentCard();
 
-        const noUpdateNeeded = !result || result.cardId === lastCardId;
+        const noUpdateNeeded = !cardData || cardData.cardId === lastCardId;
         if (noUpdateNeeded) return;
 
-        updateStatus('Card with ID ' + result.cardId + ' fetched');
-        lastCardId = result.cardId;
-        displayCardInfo(result);
+        updateStatus('Card with ID ' + cardData.cardId + ' fetched');
+        lastCardId = cardData.cardId;
+        populateFieldNames(cardData);
+        displayCardInfo(cardData);
     }
 
     setInterval(pollForNewCard, 200);
