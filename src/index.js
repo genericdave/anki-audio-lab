@@ -3,7 +3,17 @@ import WaveSurfer from "wavesurfer.js";
 import { ankiConnectInvoke } from "./util.js";
 
 
+// Elements
+const StatusText = document.getElementById("status");
+const FieldNameSelect = document.getElementById("field-name-select");
+const RegexPatternInput = document.getElementById("regex-pattern-input");
+const CardFieldsElement = document.getElementById("card-fields");
+
+
 // Init
+const savedRegex = localStorage.getItem('RegexPatternInput.value');
+if (savedRegex) RegexPatternInput.value = savedRegex;
+
 const WS = WaveSurfer.create({
     container: "#waveform",
     waveColor: "rgba(200, 200, 200, 0.5)",
@@ -13,19 +23,10 @@ const WS = WaveSurfer.create({
 });
 
 
-// Elements
-const StatusText = document.getElementById("status");
-const FieldNameSelect = document.getElementById("field-name-select");
-const RegexPatternInput = document.getElementById("regex-pattern-input");
-const CardFieldsElement = document.getElementById("card-fields");
-
-
 // Events
-FieldNameSelect.addEventListener("change", displayCurrentCard);
-RegexPatternInput.addEventListener("input", displayCurrentCard);
-WS.on("interaction", () => {
-    WS.playPause();
-});
+FieldNameSelect.addEventListener("change", userInfoChanged);
+RegexPatternInput.addEventListener("input", userInfoChanged);
+WS.on("interaction", () => { WS.playPause(); });
 
 
 // Logic
@@ -57,6 +58,12 @@ function cardError(e) {
     updateStatus(e);
     clearAudio();
     clearCardInfo();
+}
+
+function userInfoChanged() {
+    localStorage.setItem('FieldNameSelect.value', FieldNameSelect.value);
+    localStorage.setItem('RegexPatternInput.value', RegexPatternInput.value);
+    displayCurrentCard();
 }
 
 async function retrieveAudio(filename) {
@@ -102,12 +109,13 @@ function displayCurrentCard() {
 function populateFieldNames() {
     console.log("Repopulating field names dropdown.");
     const previousSelection = FieldNameSelect.value;
+    const savedFieldName = localStorage.getItem('FieldNameSelect.value');
 
     let optionsHTML = "";
     for (const field of Object.keys(CurrentCard.fields)) {
         let selected = "";
-        if (field === previousSelection) {
-            console.log(`Reselecting "${previousSelection}" field.`);
+        if (field === previousSelection || field === savedFieldName) {
+            console.log(`Reselecting field: "${field}".`);
             selected = "selected";
         }
         optionsHTML += `<option value="${field}" ${selected}>${field}</option>`;
