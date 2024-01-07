@@ -57,7 +57,7 @@ async function retrieveAudio(filename) {
         WS.toggleInteraction(true);
         updateStatus('Audio file loaded');
     } catch (e) {
-        updateStatus(`Error: ${e}`);
+        updateStatus(e);
     }
 }
 
@@ -70,13 +70,15 @@ function displayCurrentCard() {
 
     try {
         const matches = fieldValue.match(RegExp(RegexPatternInput.value));
+        if (!matches || matches.length < 2) {
+            throw new Error("No audio file matched");
+        }
         // Using the first captured group from regex to play audio
         retrieveAudio(matches[1]);
         updateStatus(`Audio fetched from card with ID ${CurrentCard.cardId}`);
     } catch (e) {
-        updateStatus("Invalid regular expression or no matches");
+        updateStatus(e);
         clearAudio();
-        return;
     }
 }
 
@@ -98,7 +100,7 @@ function populateFieldNames() {
 let CurrentCard = { "cardId": null };
 async function fetchCurrentCard() {
     try {
-        let newCard = await ankiConnectInvoke('guiCurrentCard', 6);
+        const newCard = await ankiConnectInvoke('guiCurrentCard', 6);
         if (!newCard || newCard.cardId === CurrentCard.cardId) return;
         CurrentCard = newCard;
         updateStatus(`Card with ID ${CurrentCard.cardId} fetched`);
@@ -107,7 +109,7 @@ async function fetchCurrentCard() {
     } catch (e) {
         CurrentCard = { "cardId": null };
         clearAllCardInfo();
-        updateStatus(`Error: ${e}`);
+        updateStatus(e);
         return;
     }
 }
