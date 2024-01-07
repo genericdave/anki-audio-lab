@@ -102,8 +102,8 @@ function populateFieldNames() {
 
     let optionsHTML = "";
     for (const field of Object.keys(CurrentCard.fields)) {
-        if (field === previousSelection) { console.log(`Reselecting "${previousSelection}" field`); }
-        optionsHTML += `<option value="${field}" ${field === previousSelection ? "selected" : ""}}>${field}</option>`;
+        if (field === previousSelection) { console.log(`reselecting "${previousSelection}" field`); }
+        optionsHTML += `<option value="${field}" ${field === previousSelection ? "selected" : ""}>${field}</option>`;
     }
 
     FieldNameSelect.innerHTML = optionsHTML;
