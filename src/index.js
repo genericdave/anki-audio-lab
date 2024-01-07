@@ -47,13 +47,13 @@ function clearCardInfo() {
 }
 
 function audioError(e) {
-    console.error(`Audio error: ${e}`);
+    console.log(`Audio error: ${e}`);
     updateStatus(e);
     clearAudio();
 }
 
 function cardError(e) {
-    console.error(`Card error: ${e}`);
+    console.log(`Card error: ${e}`);
     updateStatus(e);
     clearAudio();
     clearCardInfo();
@@ -105,8 +105,12 @@ function populateFieldNames() {
 
     let optionsHTML = "";
     for (const field of Object.keys(CurrentCard.fields)) {
-        if (field === previousSelection) { console.log(`Reselecting "${previousSelection}" field.`); }
-        optionsHTML += `<option value="${field}" ${field === previousSelection ? "selected" : ""}>${field}</option>`;
+        let selected = "";
+        if (field === previousSelection) {
+            console.log(`Reselecting "${previousSelection}" field.`);
+            selected = "selected";
+        }
+        optionsHTML += `<option value="${field}" ${selected}>${field}</option>`;
     }
 
     FieldNameSelect.innerHTML = optionsHTML;
