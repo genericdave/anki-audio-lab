@@ -1,6 +1,7 @@
+import _ from 'lodash';
 import WaveSurfer from 'wavesurfer.js';
 import { ankiConnectInvoke } from "./util.js";
-const _ = require('lodash');
+
 
 // Init
 const WS = WaveSurfer.create({
