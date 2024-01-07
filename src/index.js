@@ -28,7 +28,18 @@ WS.on('interaction', () => {
 
 
 // Logic
-async function retrieveAndPlayAudio(filename) {
+function clearAudio() {
+    WS.empty();
+    WS.toggleInteraction(false);
+}
+
+function clearAllCardInfo() {
+    clearAudio();
+    FieldNameSelect.innerHTML = '';
+    CardFieldsElement.textContent = '';
+}
+
+async function retrieveAudio(filename) {
     try {
         const result = await ankiConnectInvoke('retrieveMediaFile', 6, { filename });
 
@@ -42,6 +53,7 @@ async function retrieveAndPlayAudio(filename) {
         const audioUrl = URL.createObjectURL(new Blob([audioBuffer], { type: 'audio/mp3' }));
 
         WS.load(audioUrl);
+        WS.toggleInteraction(true);
         updateStatus('Audio file loaded');
     } catch (e) {
         updateStatus(`Error: ${e}`);
@@ -55,23 +67,16 @@ function displayCurrentCard() {
     const fieldName = FieldNameSelect.value;
     const fieldValue = _.get(CurrentCard, ['fields', fieldName, 'value']);
 
-    if (!fieldValue) {
-        updateStatus('Field not found or invalid regex pattern');
-        // Clear current audio
+    try {
+        const matches = fieldValue.match(RegExp(RegexPatternInput.value));
+        // Using the first captured group from regex to play audio
+        retrieveAudio(matches[1]);
+        updateStatus(`Audio fetched from card with ID ${CurrentCard.cardId}`);
+    } catch (e) {
+        updateStatus("Invalid regular expression or no matches");
+        clearAudio();
         return;
     }
-
-    const matches = fieldValue.match(RegExp(RegexPatternInput.value));
-
-    if (!matches || !matches[1]) {
-        updateStatus('No matching audio file found');
-        // Clear current audio
-        return;
-    }
-
-    // Using the first captured group from regex to play audio
-    retrieveAndPlayAudio(matches[1]);
-    updateStatus(`Audio fetched from card with ID ${CurrentCard.cardId}`);
 }
 
 function updateStatus(message) {
@@ -100,8 +105,7 @@ async function fetchCurrentCard() {
         displayCurrentCard();
     } catch (e) {
         CurrentCard = { "cardId": null };
-        // Clear field names
-        // Clear current card info & audio
+        clearAllCardInfo();
         updateStatus(`Error: ${e}`);
         return;
     }
