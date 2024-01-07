@@ -11,11 +11,13 @@ const WS = WaveSurfer.create({
     sampleRate: 11025,
 });
 
+
 // Elements
 const StatusText = document.getElementById('status');
 const FieldNameSelect = document.getElementById('field-name-select');
 const RegexPatternInput = document.getElementById('regex-pattern-input');
 const CardFieldsElement = document.getElementById('card-fields');
+
 
 // Events
 FieldNameSelect.addEventListener('change', displayCurrentCard);
@@ -23,6 +25,7 @@ RegexPatternInput.addEventListener('input', displayCurrentCard);
 WS.on('interaction', () => {
     WS.playPause();
 });
+
 
 // Logic
 async function retrieveAndPlayAudio(filename) {
@@ -44,7 +47,6 @@ async function retrieveAndPlayAudio(filename) {
         updateStatus(`Error: ${e}`);
     }
 }
-
 
 function displayCurrentCard() {
     // Displaying the card fields as formatted JSON, indenting with 4 spaces.
