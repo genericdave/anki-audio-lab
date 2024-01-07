@@ -28,20 +28,23 @@ WS.on('interaction', () => {
 async function retrieveAndPlayAudio(filename) {
     try {
         const result = await ankiConnectInvoke('retrieveMediaFile', 6, { filename });
-        if (result) {
-            const audioBlob = atob(result); // Decode base64
-            const audioBuffer = new Uint8Array(audioBlob.length).map((_, i) => audioBlob.charCodeAt(i));
-            const audioUrl = URL.createObjectURL(new Blob([audioBuffer], { type: 'audio/mp3' }));
 
-            WS.load(audioUrl);
-            updateStatus('Audio file loaded');
-        } else {
+        if (!result) {
             updateStatus('Audio file not found');
+            return;
         }
+
+        const audioBlob = atob(result); // Decode base64
+        const audioBuffer = new Uint8Array(audioBlob.length).map((_, i) => audioBlob.charCodeAt(i));
+        const audioUrl = URL.createObjectURL(new Blob([audioBuffer], { type: 'audio/mp3' }));
+
+        WS.load(audioUrl);
+        updateStatus('Audio file loaded');
     } catch (e) {
         updateStatus(`Error: ${e}`);
     }
 }
+
 
 function displayCurrentCard() {
     // Displaying the card fields as formatted JSON, indenting with 4 spaces.
