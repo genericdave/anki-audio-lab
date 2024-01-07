@@ -34,10 +34,20 @@ function clearAudio() {
     WS.toggleInteraction(false);
 }
 
-function clearAllCardInfo() {
-    clearAudio();
+function clearCardInfo() {
     FieldNameSelect.innerHTML = '';
     CardFieldsElement.textContent = '';
+}
+
+function audioError(e) {
+    updateStatus(e);
+    clearAudio();
+}
+
+function cardError(e) {
+    updateStatus(e);
+    clearAudio();
+    clearCardInfo();
 }
 
 async function retrieveAudio(filename) {
@@ -57,7 +67,7 @@ async function retrieveAudio(filename) {
         WS.toggleInteraction(true);
         updateStatus('Audio file loaded');
     } catch (e) {
-        updateStatus(e);
+        audioError(e);
     }
 }
 
@@ -77,8 +87,7 @@ function displayCurrentCard() {
         retrieveAudio(matches[1]);
         updateStatus(`Audio fetched from card with ID ${CurrentCard.cardId}`);
     } catch (e) {
-        updateStatus(e);
-        clearAudio();
+        audioError(e);
     }
 }
 
@@ -108,9 +117,7 @@ async function fetchCurrentCard() {
         displayCurrentCard();
     } catch (e) {
         CurrentCard = { "cardId": null };
-        clearAllCardInfo();
-        updateStatus(e);
-        return;
+        cardError(e);
     }
 }
 
