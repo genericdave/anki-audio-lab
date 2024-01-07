@@ -29,24 +29,31 @@ WS.on("interaction", () => {
 
 
 // Logic
+function updateStatus(message) {
+    console.log(`New status: ${message}.`);
+    StatusText.textContent = message;
+}
+
 function clearAudio() {
-    console.log("audio cleared");
+    console.log("Audio cleared.");
     WS.empty();
     WS.toggleInteraction(false);
 }
 
 function clearCardInfo() {
-    console.log("card cleared");
+    console.log("Card cleared.");
     FieldNameSelect.innerHTML = "";
     CardFieldsElement.textContent = "";
 }
 
 function audioError(e) {
+    console.error(`Audio error: ${e}`);
     updateStatus(e);
     clearAudio();
 }
 
 function cardError(e) {
+    console.error(`Card error: ${e}`);
     updateStatus(e);
     clearAudio();
     clearCardInfo();
@@ -67,7 +74,6 @@ async function retrieveAudio(filename) {
 
         WS.load(audioUrl);
         WS.toggleInteraction(true);
-        updateStatus("Audio file loaded");
     } catch (e) {
         audioError(e);
     }
@@ -93,16 +99,13 @@ function displayCurrentCard() {
     }
 }
 
-function updateStatus(message) {
-    StatusText.textContent = message;
-}
-
 function populateFieldNames() {
+    console.log("Repopulating field names dropdown.");
     const previousSelection = FieldNameSelect.value;
 
     let optionsHTML = "";
     for (const field of Object.keys(CurrentCard.fields)) {
-        if (field === previousSelection) { console.log(`reselecting "${previousSelection}" field`); }
+        if (field === previousSelection) { console.log(`Reselecting "${previousSelection}" field.`); }
         optionsHTML += `<option value="${field}" ${field === previousSelection ? "selected" : ""}>${field}</option>`;
     }
 
@@ -114,11 +117,13 @@ async function fetchCurrentCard() {
     try {
         const newCard = await ankiConnectInvoke("guiCurrentCard", 6);
         if (!newCard || newCard.cardId === CurrentCard.cardId) return;
+        console.log("New card fetched.");
         CurrentCard = newCard;
         updateStatus(`Card with ID ${CurrentCard.cardId} fetched`);
         populateFieldNames();
         displayCurrentCard();
     } catch (e) {
+        console.log("No card found.");
         CurrentCard = { "cardId": null };
         cardError(e);
     }
