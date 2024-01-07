@@ -1,5 +1,6 @@
 import WaveSurfer from 'wavesurfer.js';
 import { ankiConnectInvoke } from "./util.js";
+const _ = require('lodash');
 
 // Init
 const WS = WaveSurfer.create({
@@ -38,7 +39,7 @@ async function retrieveAndPlayAudio(filename) {
             updateStatus('Audio file not found');
         }
     } catch (e) {
-        updateStatus('Error: ' + e);
+        updateStatus(`Error: ${e}`);
     }
 }
 
@@ -47,26 +48,26 @@ function displayCurrentCard() {
     CardFieldsElement.textContent = JSON.stringify(CurrentCard.fields, null, 4);
 
     const fieldName = FieldNameSelect.value;
-    const regexPattern = RegexPatternInput.value;
+    const fieldValue = _.get(CurrentCard, ['fields', fieldName, 'value']);
 
-    if (!fieldName || !regexPattern || !CurrentCard || !CurrentCard.fields || !CurrentCard.fields[fieldName]) {
+    if (!fieldValue) {
         updateStatus('Field not found or invalid regex pattern');
+        // Clear current audio
         return;
     }
 
-    const fieldValue = CurrentCard.fields[fieldName].value;
-    const matches = fieldValue.match(RegExp(regexPattern));
+    const matches = fieldValue.match(RegExp(RegexPatternInput.value));
 
     if (!matches || !matches[1]) {
         updateStatus('No matching audio file found');
+        // Clear current audio
         return;
     }
 
     // Using the first captured group from regex to play audio
     retrieveAndPlayAudio(matches[1]);
-    updateStatus('Audio fetched from card with ID ' + CurrentCard.cardId);
+    updateStatus(`Audio fetched from card with ID ${CurrentCard.cardId}`);
 }
-
 
 function updateStatus(message) {
     StatusText.textContent = message;
@@ -95,8 +96,8 @@ async function fetchCurrentCard() {
     } catch (e) {
         CurrentCard = { "cardId": null };
         // Clear field names
-        // Clear card info
-        updateStatus('Error: ' + e);
+        // Clear current card info & audio
+        updateStatus(`Error: ${e}`);
         return;
     }
 }
