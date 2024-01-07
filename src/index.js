@@ -10,8 +10,18 @@ const wavesurfer = WaveSurfer.create({
     sampleRate: 11025,
 });
 
+// Elements
+const StatusText = document.getElementById('status');
+const FieldNameSelect = document.getElementById('field-name-select');
+const RegexPatternInput = document.getElementById('regex-pattern-input');
+const CardFieldsElement = document.getElementById('card-fields');
 
-// Functions
+// Events
+FieldNameSelect.addEventListener('change', displayCurrentCard);
+RegexPatternInput.addEventListener('input', displayCurrentCard);
+wavesurfer.on('interaction', wavesurfer.playPause);
+
+// Logic
 async function retrieveAndPlayAudio(filename) {
     try {
         const result = await ankiConnectInvoke('retrieveMediaFile', 6, { filename });
@@ -30,23 +40,21 @@ async function retrieveAndPlayAudio(filename) {
     }
 }
 
-function displayCardInfo(cardData) {
-    // Displaying the card fields as formatted JSON
-    cardFieldsElement.textContent = JSON.stringify(cardData.fields, null, 4); // Indents with 4 spaces
+function displayCurrentCard() {
+    // Displaying the card fields as formatted JSON, indenting with 4 spaces.
+    CardFieldsElement.textContent = JSON.stringify(CurrentCard.fields, null, 4);
 
-    // Extracting field name and regex pattern from user input
-    const fieldName = fieldNameSelect.value;
-    const regexPattern = regexPatternInput.value;
+    const fieldName = FieldNameSelect.value;
+    const regexPattern = RegexPatternInput.value;
 
     // Checking if the field exists and applying regex to extract audio filename
-    if (fieldName && cardData.fields[fieldName] && regexPattern) {
-        const fieldValue = cardData.fields[fieldName].value;
+    if (fieldName && CurrentCard.fields[fieldName] && regexPattern) {
+        const fieldValue = CurrentCard.fields[fieldName].value;
         const regex = new RegExp(regexPattern);
         const matches = fieldValue.match(regex);
-
         // Using the first captured group from regex
         if (matches && matches[1]) {
-            updateStatus('Audio fetched from card with ID ' + cardData.cardId);
+            updateStatus('Audio fetched from card with ID ' + CurrentCard.cardId);
             retrieveAndPlayAudio(matches[1]); // Using the extracted audio filename
         } else {
             updateStatus('No matching audio file found');
@@ -56,64 +64,37 @@ function displayCardInfo(cardData) {
     }
 }
 
-
-// View update
-const statusElement = document.getElementById('status');
-const fieldNameSelect = document.getElementById('field-name-select');
-const regexPatternInput = document.getElementById('regex-pattern-input');
-const cardFieldsElement = document.getElementById('card-fields');
-
-wavesurfer.on('interaction', wavesurfer.playPause);
-
 function updateStatus(message) {
-    statusElement.textContent = message;
+    StatusText.textContent = message;
 }
 
-function populateFieldNames(cardData) {
-    const previousSelection = fieldNameSelect.value;
+function populateFieldNames() {
+    const previousSelection = FieldNameSelect.value;
 
     let optionsHTML = "";
-    for (const field of Object.keys(cardData.fields)) {
+    for (const field of Object.keys(CurrentCard.fields)) {
         optionsHTML += `<option value="${field}" ${field === previousSelection ? 'selected' : ''}}>${field}</option>`;
     }
 
-    fieldNameSelect.innerHTML = optionsHTML;
+    FieldNameSelect.innerHTML = optionsHTML;
 }
 
+let CurrentCard = { "cardId": null };
 async function fetchCurrentCard() {
     try {
-        return await ankiConnectInvoke('guiCurrentCard', 6);
+        let newCard = await ankiConnectInvoke('guiCurrentCard', 6);
+        if (!newCard || newCard.cardId === CurrentCard.cardId) return;
+        CurrentCard = newCard;
+        updateStatus(`Card with ID ${CurrentCard.cardId} fetched`);
+        populateFieldNames();
+        displayCurrentCard();
     } catch (e) {
+        CurrentCard = { "cardId": null };
+        // Clear field names
+        // Clear card info
         updateStatus('Error: ' + e);
         return;
     }
 }
 
-
-// Main
-async function main() {
-    let lastCardId = null;
-    let lastSelectedField = null;
-    async function pollForNewCard() {
-        const cardData = await fetchCurrentCard();
-        if (!cardData) {
-            // No card available, so unload audio and card data.
-        } else if (cardData.cardId === lastCardId) {
-            // Card didn't change, so do nothing.
-            return;
-        }
-
-        // TODO: Add a check to see if the newly selected field from
-        // populateFieldNames is different from lastSelectedField. If so, we
-        // should update, even if cardId hasn't changed. populateFieldNames
-        // needs to return the proper data.
-
-        lastCardId = cardData.cardId;
-        populateFieldNames(cardData);
-        displayCardInfo(cardData);
-    }
-
-    setInterval(pollForNewCard, 200);
-}
-
-main();
+setInterval(fetchCurrentCard, 200);
