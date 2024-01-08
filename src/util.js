@@ -10,11 +10,14 @@ export const WS = WaveSurfer.create({
     backend: "MediaElement",
     barWidth: 3,
     container: "#waveform",
+    cursorColor: "rgba(255, 255, 255, 0.5)",
+    cursorWidth: 1,
+    height: 150,
     minPxPerSec: 200,
-    normalize: false,
-    progressColor: "rgba(100, 100, 100, 1)",
+    normalize: true,
+    progressColor: "rgba(255, 255, 255, 0.2)",
     sampleRate: 11025,
-    waveColor: "rgba(210, 41, 57, 1)",
+    waveColor: "rgba(210, 40, 60, 1)",
 });
 
 export function ankiConnectInvoke(action, version, params = {}) {
