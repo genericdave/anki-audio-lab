@@ -1,6 +1,5 @@
 import _ from "lodash";
 // import bootstrap from 'bootstrap'
-import WaveSurfer from "wavesurfer.js";
 import * as util from "./util.js";
 
 // Config
@@ -16,52 +15,41 @@ const FieldNameSelect = document.getElementById("field-name-select");
 const PlaybackDisplay = document.getElementById("playback-display");
 
 
-// Init
-const WS = WaveSurfer.create({
-    container: "#waveform",
-    waveColor: "rgba(200, 200, 200, 0.5)",
-    progressColor: "rgba(100, 100, 100, 0.5)",
-    minPxPerSec: 200,
-    sampleRate: 11025
-});
-
-
 // Events
 FieldNameSelect.addEventListener("change", userInfoChanged);
-WS.on("interaction", () => { WS.playPause(); });
 
 document.addEventListener('keydown', function (event) {
     let shouldPreventDefault = true;
 
     switch (event.code) {
         case 'Space':
-            WS.playPause();
+            util.WS.playPause();
             break;
         case 'ArrowLeft':
-            WS.skip(-skipDelta);
+            util.WS.skip(-skipDelta);
             break;
         case 'ArrowRight':
-            WS.skip(skipDelta);
+            util.WS.skip(skipDelta);
             break;
         case 'ArrowUp':
             // Increase playback speed.
-            const upRate = Math.min(WS.getPlaybackRate() + rateDelta, MaxRate).toFixed(1);
-            WS.setPlaybackRate(Number(upRate));
+            const upRate = Math.min(util.WS.getPlaybackRate() + rateDelta, MaxRate).toFixed(1);
+            util.WS.setPlaybackRate(Number(upRate));
             PlaybackDisplay.innerText = upRate;
             break;
         case 'ArrowDown':
             // Decrease playback speed.
-            const downRate = Math.max(WS.getPlaybackRate() - rateDelta, MinRate).toFixed(1);
-            WS.setPlaybackRate(Number(downRate));
+            const downRate = Math.max(util.WS.getPlaybackRate() - rateDelta, MinRate).toFixed(1);
+            util.WS.setPlaybackRate(Number(downRate));
             PlaybackDisplay.innerText = downRate;
             break;
         case 'BracketLeft':
             // Jumpt to start.
-            WS.seekTo(0);
+            util.WS.seekTo(0);
             break;
         case 'BracketRight':
             // Jump to end.
-            WS.seekTo(1);
+            util.WS.seekTo(1);
             break;
         default:
             shouldPreventDefault = false;
@@ -79,8 +67,8 @@ function updateStatus(message) {
 
 function clearAudio() {
     console.log("Audio cleared.");
-    WS.empty();
-    WS.toggleInteraction(false);
+    util.WS.empty();
+    util.WS.toggleInteraction(false);
 }
 
 function clearCardInfo() {
@@ -119,8 +107,8 @@ async function retrieveAudio(filename) {
         const audioBuffer = new Uint8Array(audioBlob.length).map((_, i) => audioBlob.charCodeAt(i));
         const audioUrl = URL.createObjectURL(new Blob([audioBuffer], { type: "audio/mp3" }));
 
-        WS.load(audioUrl);
-        WS.toggleInteraction(true);
+        util.WS.load(audioUrl);
+        util.WS.toggleInteraction(true);
     } catch (e) {
         audioError(e);
     }
