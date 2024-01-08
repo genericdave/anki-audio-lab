@@ -9,14 +9,14 @@
     <link href="~/node_modules/bootstrap/dist/css/bootstrap.css" rel="stylesheet">
 </head>
 
-<body>
-    <div>
+<body data-bs-theme="dark">
+    <div class="container">
         <div id="waveform"></div>
         <div><span id="playback-display">1.0</span> x</div>
         <br>
         <h2>Status: <span id="status-text">Waiting...</span></h2>
-        <label for="field-name-select">Audio Field Name:</label>
-        <select id="field-name-select"></select>
+        <label for="field-name-select">Field Containing Audio:</label>
+        <select id="field-name-select" class="form-select"></select>
     </div>
 </body>
 
