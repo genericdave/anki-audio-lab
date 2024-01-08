@@ -1,19 +1,14 @@
 import _ from "lodash";
 import WaveSurfer from "wavesurfer.js";
-import { ankiConnectInvoke } from "./util.js";
+import * as util from "./util.js";
 
 
 // Elements
 const StatusText = document.getElementById("status");
 const FieldNameSelect = document.getElementById("field-name-select");
-const RegexPatternInput = document.getElementById("regex-pattern-input");
-const CardFieldsElement = document.getElementById("card-fields");
 
 
 // Init
-const savedRegex = localStorage.getItem('RegexPatternInput.value');
-if (savedRegex) RegexPatternInput.value = savedRegex;
-
 const WS = WaveSurfer.create({
     container: "#waveform",
     waveColor: "rgba(200, 200, 200, 0.5)",
@@ -25,7 +20,6 @@ const WS = WaveSurfer.create({
 
 // Events
 FieldNameSelect.addEventListener("change", userInfoChanged);
-RegexPatternInput.addEventListener("input", userInfoChanged);
 WS.on("interaction", () => { WS.playPause(); });
 
 
@@ -44,7 +38,6 @@ function clearAudio() {
 function clearCardInfo() {
     console.log("Card cleared.");
     FieldNameSelect.innerHTML = "";
-    CardFieldsElement.textContent = "";
 }
 
 function audioError(e) {
@@ -62,13 +55,12 @@ function cardError(e) {
 
 function userInfoChanged() {
     localStorage.setItem('FieldNameSelect.value', FieldNameSelect.value);
-    localStorage.setItem('RegexPatternInput.value', RegexPatternInput.value);
     displayCurrentCard();
 }
 
 async function retrieveAudio(filename) {
     try {
-        const result = await ankiConnectInvoke("retrieveMediaFile", 6, { filename });
+        const result = await util.ankiConnectInvoke("retrieveMediaFile", 6, { filename });
 
         if (!result) {
             updateStatus("Audio file not found");
@@ -87,20 +79,17 @@ async function retrieveAudio(filename) {
 }
 
 function displayCurrentCard() {
-    // Displaying the card fields as formatted JSON, indenting with 4 spaces.
-    CardFieldsElement.textContent = JSON.stringify(CurrentCard.fields, null, 4);
-
     const fieldName = FieldNameSelect.value;
     const fieldValue = _.get(CurrentCard, ["fields", fieldName, "value"]);
 
     try {
-        const matches = fieldValue.match(RegExp(RegexPatternInput.value));
-        if (!matches || matches.length < 2) {
-            throw new Error("No audio file matched");
+        const matches = fieldValue.match(RegExp(util.audioFileRegex));
+        console.log(`Detected audio file: ${matches}`);
+        if (_.isEmpty(matches)) {
+            throw new Error("No audio file detected");
         }
-        // Using the first captured group from regex to play audio
-        retrieveAudio(matches[1]);
-        updateStatus(`Audio fetched from card with ID ${CurrentCard.cardId}`);
+        retrieveAudio(matches[0]);
+        updateStatus(`Fetched audio: ${matches[0]}`);
     } catch (e) {
         audioError(e);
     }
@@ -127,7 +116,7 @@ function populateFieldNames() {
 let CurrentCard = { "cardId": null };
 async function fetchCurrentCard() {
     try {
-        const newCard = await ankiConnectInvoke("guiCurrentCard", 6);
+        const newCard = await util.ankiConnectInvoke("guiCurrentCard", 6);
         if (!newCard || newCard.cardId === CurrentCard.cardId) return;
         console.log("New card fetched.");
         CurrentCard = newCard;
