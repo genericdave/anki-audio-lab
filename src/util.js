@@ -1,4 +1,5 @@
 import WaveSurfer from "wavesurfer.js";
+import Hover from 'wavesurfer.js/dist/plugins/hover.esm.js';
 import RegionsPlugin from "wavesurfer.js/dist/plugins/regions.esm.js";
 import Spectrogram from 'wavesurfer.js/dist/plugins/spectrogram.esm.js';
 
@@ -23,6 +24,14 @@ export const WS = WaveSurfer.create({
     waveColor: "rgba(210, 40, 60, 1)",
 });
 
+// Hover
+WS.registerPlugin(
+    Hover.create({
+        lineColor: "rgba(255, 255, 255, 0.4)",
+        labelColor: "rgba(255, 255, 255, 0)",
+        labelBackground: "rgba(255, 255, 255, 0)",
+    })
+);
 
 // Spectrogram
 WS.registerPlugin(
