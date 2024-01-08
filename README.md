@@ -77,4 +77,5 @@ This project uses third party libraries:
 
 - [wavesurfer.js](https://github.com/katspaugh/wavesurfer.js)
 - [lodash](https://github.com/lodash/lodash)
+- [Bootstrap](https://github.com/twbs/bootstrap)
 - For detailed license terms, refer to the `LICENSE-third-party` file in this repository.
