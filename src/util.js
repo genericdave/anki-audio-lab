@@ -36,7 +36,7 @@ WS.registerPlugin(
 // Spectrogram
 WS.registerPlugin(
     Spectrogram.create({
-        labels: true,
+        labels: false,
         splitChannels: false,
         fftSamples: 512
     })
