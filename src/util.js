@@ -2,6 +2,7 @@ import WaveSurfer from "wavesurfer.js";
 import Hover from 'wavesurfer.js/dist/plugins/hover.esm.js';
 import RegionsPlugin from "wavesurfer.js/dist/plugins/regions.esm.js";
 import Spectrogram from 'wavesurfer.js/dist/plugins/spectrogram.esm.js';
+const colormap = require('colormap');
 
 export const audioFileRegex = /[^:"'\[\]]+?\.(3gp|aa|aac|aax|act|aiff|alac|amr|ape|au|awb|dss|dvf|flac|gsm|iklax|ivs|m4a|m4b|m4p|mmf|movpkg|mp3|mpc|msv|nmf|ogg|opus|ra|raw|rf64|sln|tta|voc|vox|wav|wma|wv|webm|8svx|cda)/gi;
 
@@ -34,11 +35,18 @@ WS.registerPlugin(
 );
 
 // Spectrogram
+const colors = colormap({
+    colormap: 'cubehelix',
+    nshades: 256,
+    format: 'float'
+});
+
 WS.registerPlugin(
     Spectrogram.create({
         labels: false,
         splitChannels: false,
-        fftSamples: 512
+        fftSamples: 512,
+        colorMap: colors
     })
 );
 
