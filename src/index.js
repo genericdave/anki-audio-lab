@@ -97,13 +97,13 @@ function getAudioFilename() {
 
 function populateFieldNames() {
     console.log("Repopulating field names dropdown.");
-    const previousSelection = FieldNameSelect.value;
+    const previousFieldName = FieldNameSelect.value;
     const savedFieldName = localStorage.getItem('FieldNameSelect.value');
 
     let optionsHTML = "";
     for (const field of Object.keys(CurrentCard.fields)) {
         let selected = "";
-        if (field === previousSelection || field === savedFieldName) {
+        if (field === previousFieldName || field === savedFieldName) {
             console.log(`Reselecting field: "${field}".`);
             selected = "selected";
         }
