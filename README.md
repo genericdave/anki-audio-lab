@@ -28,11 +28,24 @@ The final configuration should resemble the following JSON structure:
 ```
 
 
-## Using Anki Audio Lab
+## Displaying Card Audio
 
 1. After configuring AnkiConnect, go to [Anki Audio Lab](https://genericdave.github.io/anki-audio-lab/) in your browser.
 2. Open Anki and start reviewing cards. A card must be displayed for review before it will load.
 3. In Anki Audio Lab, click the the `Audio Field Name` dropdown and select the flashcard field that contains the audio you want to load.
+
+
+## Usage Instructions
+
+* Click to change the playhead's location.
+* Click and drag to select a region. Click outside a region to deselect it. Click an already existing region to select it and play it.
+* **Keyboard Shortcuts:**
+    * Space: Play/Pause
+    * Left/Right Arrow Keys: Skip Back/Forward
+    * Up/Down Arrow Keys: Increase/Decrease Playback Rate
+    * Left/Right Brackets [ ]: Jump to Start/End
+    * P Key: Toggle Preserve Pitch
+    * Backspace/Delete: Remove Currently Selected Region
 
 
 ## Techniques For Learning Pronunciation, Pitch, Prosody, etc.
