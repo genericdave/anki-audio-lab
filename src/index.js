@@ -22,6 +22,40 @@ const WS = WaveSurfer.create({
 FieldNameSelect.addEventListener("change", userInfoChanged);
 WS.on("interaction", () => { WS.playPause(); });
 
+document.addEventListener('keydown', function (event) {
+    let shouldPreventDefault = true;
+
+    switch (event.code) {
+        case 'Space':
+            WS.playPause();
+            break;
+        case 'ArrowLeft':
+            WS.skip(-0.5); // Skip back half a second
+            break;
+        case 'ArrowRight':
+            WS.skip(0.5); // Skip forward half a second
+            break;
+        case 'ArrowUp':
+            // Increase playback speed
+            WS.setPlaybackRate(Math.min(WS.getPlaybackRate() + 0.2, 2)); // Adjust the upper limit as needed
+            break;
+        case 'ArrowDown':
+            // Decrease playback speed
+            WS.setPlaybackRate(Math.max(WS.getPlaybackRate() - 0.2, 0.2)); // Adjust the lower limit as needed
+            break;
+        case 'BracketLeft': // `[` key
+            WS.seekTo(0); // Go to the beginning of the audio
+            break;
+        case 'BracketRight': // `]` key
+            WS.seekTo(1); // Go to the end of the audio
+            break;
+        default:
+            shouldPreventDefault = false;
+            break;
+    }
+    if (shouldPreventDefault) event.preventDefault();
+});
+
 
 // Logic
 function updateStatus(message) {
