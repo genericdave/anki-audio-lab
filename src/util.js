@@ -53,6 +53,13 @@ WSRegions.on("region-created", (region) => {
     WS.setTime(region.start);
 });
 
+WSRegions.on("region-updated", (region) => {
+    console.log("Select active region: ", region);
+    activeRegion = region;
+    WS.pause();
+    WS.setTime(region.start);
+});
+
 WSRegions.on("region-out", (region) => {
     if (activeRegion !== region) return;
     WS.pause();
