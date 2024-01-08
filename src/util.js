@@ -29,42 +29,47 @@ WS.registerPlugin(
     Spectrogram.create({
         labels: true,
         splitChannels: false,
-        fftSamples: 1024
+        fftSamples: 512
     })
 );
 
 // Regions
-const wsRegions = WS.registerPlugin(RegionsPlugin.create());
+const WSRegions = WS.registerPlugin(RegionsPlugin.create());
 
-wsRegions.enableDragSelection({
+WSRegions.enableDragSelection({
     color: "rgba(255, 255, 255, 0.2)",
 });
 
-{
-    let activeRegion = null;
-    // wsRegions.on("region-in", (region) => {
-    //     console.log("region-in", region);
-    //     activeRegion = region;
-    // });
-    wsRegions.on("region-out", (region) => {
-        console.log("Select active region: ", region);
-        if (activeRegion === region) {
-            WS.pause();
-            WS.setTime(region.start);
-        }
-    });
-    wsRegions.on("region-clicked", (region, e) => {
-        console.log("Select active region: ", region);
-        e.stopPropagation(); // prevent triggering a click on the waveform
-        activeRegion = region;
-        region.play();
-    });
-    // Reset the active region when the user clicks anywhere in the waveform
-    WS.on("interaction", () => {
-        console.log("Deselect active region");
-        activeRegion = null;
-    });
+let activeRegion = null;
+export function removeActiveRegion() {
+    if (!activeRegion) return;
+    activeRegion.remove();
 }
+
+WSRegions.on("region-created", (region) => {
+    console.log("Select active region: ", region);
+    activeRegion = region;
+    WS.pause();
+    WS.setTime(region.start);
+});
+
+WSRegions.on("region-out", (region) => {
+    if (activeRegion !== region) return;
+    WS.pause();
+    WS.setTime(region.start);
+});
+
+WSRegions.on("region-clicked", (region, e) => {
+    e.stopPropagation(); // Prevent triggering a click on the waveform.
+    console.log("Select active region: ", region);
+    activeRegion = region;
+    region.play();
+});
+
+WS.on("interaction", () => {
+    // Deselect the active region when the user clicks elsewhere in the waveform.
+    activeRegion = null;
+});
 
 
 export function ankiConnectInvoke(action, version, params = {}) {

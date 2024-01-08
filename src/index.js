@@ -56,6 +56,12 @@ document.addEventListener("keydown", function (event) {
             // Toggle preserve pitch.
             preservePitch = !preservePitch;
             util.WS.setPlaybackRate(util.WS.getPlaybackRate(), preservePitch);
+            break;
+        case "Backspace":
+        case "Delete":
+            // Remove region.
+            util.removeActiveRegion();
+            break;
         default:
             shouldPreventDefault = false;
             break;
