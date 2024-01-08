@@ -1,5 +1,5 @@
 import _ from "lodash";
-// import bootstrap from 'bootstrap'
+// import bootstrap from "bootstrap"
 import * as util from "./util.js";
 
 // Config
@@ -18,39 +18,44 @@ const PlaybackDisplay = document.getElementById("playback-display");
 // Events
 FieldNameSelect.addEventListener("change", userInfoChanged);
 
-document.addEventListener('keydown', function (event) {
+let preservePitch = true;
+document.addEventListener("keydown", function (event) {
     let shouldPreventDefault = true;
 
     switch (event.code) {
-        case 'Space':
+        case "Space":
             util.WS.playPause();
             break;
-        case 'ArrowLeft':
+        case "ArrowLeft":
             util.WS.skip(-skipDelta);
             break;
-        case 'ArrowRight':
+        case "ArrowRight":
             util.WS.skip(skipDelta);
             break;
-        case 'ArrowUp':
+        case "ArrowUp":
             // Increase playback speed.
             const upRate = Math.min(util.WS.getPlaybackRate() + rateDelta, MaxRate).toFixed(1);
             util.WS.setPlaybackRate(Number(upRate));
             PlaybackDisplay.innerText = upRate;
             break;
-        case 'ArrowDown':
+        case "ArrowDown":
             // Decrease playback speed.
             const downRate = Math.max(util.WS.getPlaybackRate() - rateDelta, MinRate).toFixed(1);
             util.WS.setPlaybackRate(Number(downRate));
             PlaybackDisplay.innerText = downRate;
             break;
-        case 'BracketLeft':
+        case "BracketLeft":
             // Jumpt to start.
             util.WS.seekTo(0);
             break;
-        case 'BracketRight':
+        case "BracketRight":
             // Jump to end.
             util.WS.seekTo(1);
             break;
+        case "KeyP":
+            // Toggle preserve pitch.
+            preservePitch = !preservePitch;
+            util.WS.setPlaybackRate(util.WS.getPlaybackRate(), preservePitch);
         default:
             shouldPreventDefault = false;
             break;
@@ -90,7 +95,7 @@ function cardError(e) {
 }
 
 function userInfoChanged() {
-    localStorage.setItem('FieldNameSelect.value', FieldNameSelect.value);
+    localStorage.setItem("FieldNameSelect.value", FieldNameSelect.value);
     getAudioFilename();
 }
 
@@ -134,7 +139,7 @@ function getAudioFilename() {
 function populateFieldNames() {
     console.log("Repopulating field names dropdown.");
     const previousFieldName = FieldNameSelect.value;
-    const savedFieldName = localStorage.getItem('FieldNameSelect.value');
+    const savedFieldName = localStorage.getItem("FieldNameSelect.value");
 
     let optionsHTML = "";
     for (const field of Object.keys(CurrentCard.fields)) {
