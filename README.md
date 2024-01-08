@@ -2,7 +2,7 @@
 
 ![Screenshot](https://github.com/genericdave/anki-audio-lab/blob/main/img/Screenshot.jpg?raw=true)
 
-Anki Audio Lab allows you to deeply inspect any audio files as you're studying them in your Anki flashcards. It allows you to see the waveform, isolate & repeat snippets, vary the playback speed, and view the colorized spectrogram.
+[Anki Audio Lab](https://genericdave.github.io/anki-audio-lab/) allows you to deeply inspect any audio files as you're studying them in your Anki flashcards. It allows you to see the waveform, isolate & repeat snippets, vary the playback speed, and view the colorized spectrogram.
 
 The only prerequisites are AnkiConnect and an up-to-date Chrome-based browser. *Note: while other browsers may or may not work, this tool has mainly been tested using a Chrome-based browser.*
 
