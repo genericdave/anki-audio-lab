@@ -10,7 +10,7 @@ The only prerequisites are AnkiConnect and an up-to-date Chrome-based browser. *
 
 Before using this tool, you need to configure AnkiConnect as follows:
 
-1. Open Anki.
+1. Open Anki and install [AnkiConnect](https://foosoft.net/projects/anki-connect).
 2. Navigate to `Tools` > `Add-ons`.
 3. Select `AnkiConnect` from the list and click `Config`.
 4. In the configuration pop-up, add the following URL to the `webCorsOriginList`:
