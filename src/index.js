@@ -2,10 +2,15 @@ import _ from "lodash";
 import WaveSurfer from "wavesurfer.js";
 import * as util from "./util.js";
 
+// Config
+const MaxRate = 2;
+const MinRate = 0.2;
+
 
 // Elements
-const StatusText = document.getElementById("status");
+const StatusText = document.getElementById("status-text");
 const FieldNameSelect = document.getElementById("field-name-select");
+const PlaybackDisplay = document.getElementById("playback-display");
 
 
 // Init
@@ -37,11 +42,15 @@ document.addEventListener('keydown', function (event) {
             break;
         case 'ArrowUp':
             // Increase playback speed
-            WS.setPlaybackRate(Math.min(WS.getPlaybackRate() + 0.2, 2)); // Adjust the upper limit as needed
+            const upRate = Math.min(WS.getPlaybackRate() + 0.2, MaxRate).toFixed(1);
+            WS.setPlaybackRate(Number(upRate));
+            PlaybackDisplay.innerText = upRate;
             break;
         case 'ArrowDown':
             // Decrease playback speed
-            WS.setPlaybackRate(Math.max(WS.getPlaybackRate() - 0.2, 0.2)); // Adjust the lower limit as needed
+            const downRate = Math.max(WS.getPlaybackRate() - 0.2, MinRate).toFixed(1);
+            WS.setPlaybackRate(Number(downRate));
+            PlaybackDisplay.innerText = downRate;
             break;
         case 'BracketLeft': // `[` key
             WS.seekTo(0); // Go to the beginning of the audio
