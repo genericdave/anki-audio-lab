@@ -55,7 +55,7 @@ function cardError(e) {
 
 function userInfoChanged() {
     localStorage.setItem('FieldNameSelect.value', FieldNameSelect.value);
-    displayCurrentCard();
+    getAudioFilename();
 }
 
 async function retrieveAudio(filename) {
@@ -78,7 +78,7 @@ async function retrieveAudio(filename) {
     }
 }
 
-function displayCurrentCard() {
+function getAudioFilename() {
     const fieldName = FieldNameSelect.value;
     const fieldValue = _.get(CurrentCard, ["fields", fieldName, "value"]);
 
@@ -122,7 +122,7 @@ async function fetchCurrentCard() {
         CurrentCard = newCard;
         updateStatus(`Card with ID ${CurrentCard.cardId} fetched`);
         populateFieldNames();
-        displayCurrentCard();
+        getAudioFilename();
     } catch (e) {
         console.log("No card found.");
         CurrentCard = { "cardId": null };
