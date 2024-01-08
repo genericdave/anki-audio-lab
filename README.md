@@ -56,7 +56,7 @@ The final configuration should resemble the following JSON structure:
 
 ## Techniques For Learning Pronunciation, Pitch, Prosody, etc.
 
-- Reduce the audio speed. It may be useful to turn off the `maintain pitch` setting in order to make the playback smoother.
+- Reduce the audio speed. It may be useful to turn off the `preserve pitch` setting in order to make the playback smoother.
 - Isolate any sections that contain sounds that are difficult to hear or say. You can isolate all the way down to a single phoneme at a time. Shadow the isolated sections, then expand your selection as you start to be able to hear and imitate the sounds accurately.
 - Look at the overall movement of the vocal frequencies on the spectrogram, especially the ones near the bottom. Which way are they trending? Do the visual rises and falls correspond with the speaker's rises and falls in pitch? Compare and contrast with the waveform, which shows the loudness of the sound, regardless of pitch.
 
