@@ -1,5 +1,11 @@
 # Anki Audio Lab
 
+![Screenshot](https://github.com/genericdave/anki-audio-lab/blob/main/img/Screenshot.jpg?raw=true)
+
+Anki Audio Lab allows you to deeply inspect any audio files as you're studying them in your Anki flashcards. It allows you to see the waveform, isolate & repeat snippets, vary the playback speed, and view the colorized spectrogram.
+
+The only prerequisites are AnkiConnect and an up-to-date Chrome-based browser. *Note: while other browsers may or may not work, this tool has mainly been tested using a Chrome-based browser.*
+
 ## AnkiConnect Configuration
 
 Before using this tool, you need to configure AnkiConnect as follows:
@@ -30,9 +36,9 @@ The final configuration should resemble the following JSON structure:
 
 ## Displaying Card Audio
 
-1. After configuring AnkiConnect, go to [Anki Audio Lab](https://genericdave.github.io/anki-audio-lab/) in your browser.
+1. After configuring AnkiConnect, go to [Anki Audio Lab](https://genericdave.github.io/anki-audio-lab/) in a Chrome-based browser.
 2. Open Anki and start reviewing cards. A card must be displayed for review before it will load.
-3. In Anki Audio Lab, click the the `Audio Field Name` dropdown and select the flashcard field that contains the audio you want to load.
+3. In Anki Audio Lab, click the the `Audio Field Name` dropdown and select the flashcard field that contains the audio you want to load. If the spectrogram appears to be vertically stretched, reload the page.
 
 
 ## Usage Instructions
