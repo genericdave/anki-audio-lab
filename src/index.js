@@ -3,8 +3,10 @@ import WaveSurfer from "wavesurfer.js";
 import * as util from "./util.js";
 
 // Config
+const rateDelta = 0.2;
 const MaxRate = 2;
 const MinRate = 0.2;
+const skipDelta = 0.5;
 
 
 // Elements
@@ -35,28 +37,30 @@ document.addEventListener('keydown', function (event) {
             WS.playPause();
             break;
         case 'ArrowLeft':
-            WS.skip(-0.5); // Skip back half a second
+            WS.skip(-skipDelta);
             break;
         case 'ArrowRight':
-            WS.skip(0.5); // Skip forward half a second
+            WS.skip(skipDelta);
             break;
         case 'ArrowUp':
-            // Increase playback speed
-            const upRate = Math.min(WS.getPlaybackRate() + 0.2, MaxRate).toFixed(1);
+            // Increase playback speed.
+            const upRate = Math.min(WS.getPlaybackRate() + rateDelta, MaxRate).toFixed(1);
             WS.setPlaybackRate(Number(upRate));
             PlaybackDisplay.innerText = upRate;
             break;
         case 'ArrowDown':
-            // Decrease playback speed
-            const downRate = Math.max(WS.getPlaybackRate() - 0.2, MinRate).toFixed(1);
+            // Decrease playback speed.
+            const downRate = Math.max(WS.getPlaybackRate() - rateDelta, MinRate).toFixed(1);
             WS.setPlaybackRate(Number(downRate));
             PlaybackDisplay.innerText = downRate;
             break;
-        case 'BracketLeft': // `[` key
-            WS.seekTo(0); // Go to the beginning of the audio
+        case 'BracketLeft':
+            // Jumpt to start.
+            WS.seekTo(0);
             break;
-        case 'BracketRight': // `]` key
-            WS.seekTo(1); // Go to the end of the audio
+        case 'BracketRight':
+            // Jump to end.
+            WS.seekTo(1);
             break;
         default:
             shouldPreventDefault = false;
