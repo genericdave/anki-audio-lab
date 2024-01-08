@@ -1,5 +1,6 @@
 import WaveSurfer from "wavesurfer.js";
 import RegionsPlugin from "wavesurfer.js/dist/plugins/regions.esm.js";
+import Spectrogram from 'wavesurfer.js/dist/plugins/spectrogram.esm.js';
 
 export const audioFileRegex = /[^:"'\[\]]+?\.(3gp|aa|aac|aax|act|aiff|alac|amr|ape|au|awb|dss|dvf|flac|gsm|iklax|ivs|m4a|m4b|m4p|mmf|movpkg|mp3|mpc|msv|nmf|ogg|opus|ra|raw|rf64|sln|tta|voc|vox|wav|wma|wv|webm|8svx|cda)/gi;
 
@@ -22,6 +23,17 @@ export const WS = WaveSurfer.create({
     waveColor: "rgba(210, 40, 60, 1)",
 });
 
+
+// Spectrogram
+WS.registerPlugin(
+    Spectrogram.create({
+        labels: true,
+        splitChannels: false,
+        fftSamples: 1024
+    })
+);
+
+// Regions
 const wsRegions = WS.registerPlugin(RegionsPlugin.create());
 
 wsRegions.enableDragSelection({
