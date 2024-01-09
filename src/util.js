@@ -82,10 +82,11 @@ WSRegions.on("region-updated", (region) => {
     WS.setTime(region.start);
 });
 
-WSRegions.on("region-out", (region) => {
-    if (activeRegion !== region) return;
+WS.on("timeupdate", (currentTime) => {
+    if (!activeRegion) return;
+    if (currentTime < activeRegion.end) return;
     WS.pause();
-    WS.setTime(region.start);
+    WS.setTime(activeRegion.start);
 });
 
 WSRegions.on("region-clicked", (region, e) => {
