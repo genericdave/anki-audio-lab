@@ -81,6 +81,7 @@ function clearAudio() {
     util.WS.empty();
     util.WS.toggleInteraction(false);
     util.removeAllRegions();
+    util.WS.seekTo(0);
 }
 
 function clearCardInfo() {
@@ -109,6 +110,7 @@ function userInfoChanged() {
 async function retrieveAudio(filename) {
     try {
         util.removeAllRegions();
+        util.WS.seekTo(0);
         const result = await util.ankiConnectInvoke("retrieveMediaFile", 6, { filename });
 
         if (!result) {
