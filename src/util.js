@@ -66,6 +66,7 @@ export function removeActiveRegion() {
 
 export function removeAllRegions() {
     WSRegions.clearRegions();
+    activeRegion = null;
 }
 
 WSRegions.on("region-created", (region) => {
