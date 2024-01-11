@@ -13,6 +13,7 @@ const skipDelta = 0.5;
 const StatusText = document.getElementById("status-text");
 const FieldNameSelect = document.getElementById("field-name-select");
 const PlaybackDisplay = document.getElementById("playback-display");
+const Waveform = document.getElementById("waveform");
 
 
 // Events
@@ -78,10 +79,13 @@ function updateStatus(message) {
 
 function clearAudio() {
     console.log("Audio cleared.");
-    util.WS.empty();
+    util.removeAllRegions();
+    Waveform.style.visibility = "hidden";
     util.WS.toggleInteraction(false);
     util.removeAllRegions();
     util.WS.seekTo(0);
+    util.WS.setPlaybackRate(1);
+    PlaybackDisplay.innerText = "1.0";
 }
 
 function clearCardInfo() {
@@ -109,7 +113,7 @@ function userInfoChanged() {
 
 async function retrieveAudio(filename) {
     try {
-        util.removeAllRegions();
+        clearAudio();
         util.WS.seekTo(0);
         const result = await util.ankiConnectInvoke("retrieveMediaFile", 6, { filename });
 
@@ -123,6 +127,7 @@ async function retrieveAudio(filename) {
         const audioUrl = URL.createObjectURL(new Blob([audioBuffer], { type: "audio/mp3" }));
 
         util.WS.load(audioUrl);
+        Waveform.style.visibility = "visible";
         util.WS.toggleInteraction(true);
     } catch (e) {
         audioError(e);

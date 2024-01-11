@@ -38,7 +38,7 @@ The final configuration should resemble the following JSON structure:
 
 1. After configuring AnkiConnect, go to [Anki Audio Lab](https://genericdave.github.io/anki-audio-lab/) in a Chrome-based browser.
 2. Open Anki and start reviewing cards. A card must be displayed for review before it will load.
-3. In Anki Audio Lab, click the the `Audio Field Name` dropdown and select the flashcard field that contains the audio you want to load. If the spectrogram appears to be vertically stretched, reload the page.
+3. In Anki Audio Lab, click the the `Audio Field Name` dropdown and select the flashcard field that contains the audio you want to load.
 
 
 ## Usage Instructions
