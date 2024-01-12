@@ -62,6 +62,7 @@ let activeRegion = null;
 export function removeActiveRegion() {
     if (!activeRegion) return;
     activeRegion.remove();
+    activeRegion = null;
 }
 
 export function removeAllRegions() {
